@@ -28,7 +28,7 @@ In order to enable WebSockets for a dapp running on the IC, we use an intermedia
 
 The gateway is needed as a WebSocket is a one-to-one connection between client and server, but the Internet Computer does not support that due to its replicated nature. The gateway translates all messages coming in on the WebSocket from the client to API canister calls for the backend and sends all messages coming from the backend on the Internet Computer out on the WebSocket with the corresponding client.
 
-Features
+# Features
 
 General: A gateway can provide WebSockets for many different dapps at the same time. A frontend can connect through any gateway to the backend (e.g., through the geographically closest one to reduce latency).
 Trustless: In order to make it impossible for the gateway to tamper with messages:
@@ -40,7 +40,7 @@ IMPORTANT CAVEAT: NO ENCRYPTION!
 No single replica can be assumed to be trusted, so the canister state cannot be assumed to be kept secret. This means that when exchanging messages with the canister, we have to keep in mind that in principle the messages could be seen by others on the canister side.
 We could encrypt the messages between the client and the canister (so that they’re hidden from the gateway and any other party that cannot see the canister state), but we chose not to do so to make it clear that in principle the messages could be seen by others on the canister side.
 
-Components
+# Components
 
 Client:
 
@@ -80,7 +80,7 @@ The backend canister exposes an interface that makes it possible for the gateway
 - When ws_close is called by the gateway corresponding to the provided client_id, the client info is deleted.
 
 
-Message flow
+# Message flow
 
 Client generates an ed25519 key pair and makes an update call to the canister to register the public key. Canister remembers the caller associated with this key. The call returns client_id.
 Client opens a websocket with the gateway.
@@ -91,7 +91,7 @@ The gateway makes an update call ws_open to the canister with the given id passi
 Whenever the websocket with the client is closed, the gateway calls ws_close. Afterwards no more messages can be sent from the canister to the client.
 
 
-Backend canister interface
+# Backend canister interface
 
 "ws_register": (blob) -> (nat64);
 
@@ -166,7 +166,7 @@ message: Vec<u8>
 and ‘sig’ is the signature corresponding to the client.
 
 
-Issues and future work
+# Issues and future work
 
 Heartbeat messages are not implemented yet.
 Heartbeat messages would ensure that the client/canister can detect the gateway crashing or misbehaving by delaying messages, and timeout. As of yet, if the gateway crashes or misbehaves, it may appear to the canister that the connection is still open, while the websocket between the gateway and the client has been closed (and vice versa).

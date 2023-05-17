@@ -1,0 +1,30 @@
+{
+  "canisters": {
+    "ic_websocket_backend": {
+      "candid": "src/ic_websocket_backend/ic_websocket_backend.did",
+      "package": "ic_websocket_backend",
+      "type": "rust"
+    },
+    "ic_websocket_frontend": {
+      "dependencies": [
+        "ic_websocket_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/ic_websocket_frontend/src/index.html"
+      },
+      "source": [
+        "src/ic_websocket_frontend/assets",
+        "dist/ic_websocket_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

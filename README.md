@@ -22,7 +22,7 @@ In the following, we provide an overview of the architecture and the instruction
 
 # Overview
 
-!(/images/image2.png)
+![](/images/image2.png)
 
 In order to enable WebSockets for a dapp running on the IC, we use an intermediary, which we call gateway, that provides a WebSocket endpoint for the frontend of the dapp, running in the user’s browser and interfaces with the canister backend.
 

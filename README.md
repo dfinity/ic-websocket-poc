@@ -82,6 +82,8 @@ The backend canister exposes an interface that makes it possible for the gateway
 
 # Message flow
 
+![](/images/image1.png)
+
 Client generates an ed25519 key pair and makes an update call to the canister to register the public key. Canister remembers the caller associated with this key. The call returns client_id.
 Client opens a websocket with the gateway.
 Client sends the first message with its client_id and the canister_id it wants to connect to. The message is signed with the private key.
@@ -93,15 +95,15 @@ Whenever the websocket with the client is closed, the gateway calls ws_close. Af
 
 # Backend canister interface
 
-"ws_register": (blob) -> (nat64);
+*"ws_register": (blob) -> (nat64);*
 
 Client submits its public key in binary before opening the websocket. Method returns client_id.
 
-"ws_get_client_key": (nat64) -> (blob);
+*"ws_get_client_key": (nat64) -> (blob);*
 
 Gateway calls this method to get a client’s public key, in order to verify its signature and accept the client’s websocket connection as valid.
 
-"ws_open": (blob, blob) -> (bool);
+*"ws_open": (blob, blob) -> (bool);*
 
 Gateway calls this method to register to poll for client’s messages. First argument is the cbor encoding of
 {
@@ -111,11 +113,11 @@ Gateway calls this method to register to poll for client’s messages. First arg
 The second argument is the signature of the first argument corresponding to the client_id.
 
 
-"ws_close": (nat64) -> ();
+*"ws_close": (nat64) -> ();*
 
 The gateway calls this method to close the websocket corresponding to the given client_id. The canister deletes the clients data and afterwards cannot queue any more messages for the client.
 
-"ws_get_messages": (nat64) -> (CertMessages) query;
+*"ws_get_messages": (nat64) -> (CertMessages) query;*
 
 The canister returns the messages with the following fields:
 client_id: u64
@@ -148,7 +150,7 @@ type CertMessages = record {
 The messages are stored in the certified map under consecutive keys. The provided ‘tree’ includes all keys in the relevant range, and thus the fields ‘cert’ and ‘tree’ serve as the certificate for all clients to which messages are addressed.
 
 
-"ws_message": (blob) -> (bool);
+*"ws_message": (blob) -> (bool);*
 
 Gateway calls this method to pass a message from the client to the canister. The argument is the cbor encoding of the candid type
 

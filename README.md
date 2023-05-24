@@ -132,6 +132,7 @@ We could encrypt the messages between the client and the canister (so that they�
   };
   ```
   The field ‘key’ provides the argument under which the hash of ‘val’ is stored in the certified map.
+  
   Up to 50 messages queued for clients of the calling gateway are returned as the candid type:
   ```
   type CertMessages = record {

@@ -47,6 +47,7 @@ We could encrypt the messages between the client and the canister (so that theyâ
 # Components
 
 1. Client:
+
    Client is the user that opens the websocket to communicate with a canister. Client will sign its messages.
    - Generates a public/private ed25519 key pair.
    - Makes an update call to the canister to register the public key. Canister remembers the caller associated with this key. The call returns client_id.
@@ -56,6 +57,7 @@ We could encrypt the messages between the client and the canister (so that theyâ
    - Sends messages to the canister to the websocket. Messages are signed with the private key.
 
 2. Gateway:
+   
    Gateway accepts websocket connections to enable clients to communicate with canisters with websockets. Gateway can only pass on messages between clients and canisters and cannot forge messages.
    - Accepts websocket connections.
    - Expects the first message from the websocket to contain canister_id and client_id, signed.
@@ -67,6 +69,7 @@ We could encrypt the messages between the client and the canister (so that theyâ
    - The gateway calls ws_close when the websocket with the client closes for any reason.
 
 3. Backend canister:
+   
    The backend canister exposes an interface that makes it possible for the gateway to facilitate websocket connections with clients.
    - Receives client public keys. Records the caller associated with the given public key.
    - Receives calls to ws_open. Verifies that the provided signature corresponds to the given client_id. Records the caller as the gateway that will poll for messages.

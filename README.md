@@ -87,23 +87,25 @@ We could encrypt the messages between the client and the canister (so that they�
 3. Client sends the first message with its client_id and the canister_id it wants to connect to. The message is signed with the private key.
 4. The gateway makes an update call ws_open to the canister with the given id passing on the message. The method returns true if the canister correctly verifies the signature with the previously registered client_id.
 5. Client composes a message and signs it. Client sends the message to the gateway over the websocket. The gateway makes an update call to forward the message to the canister.
+  
    In the other direction, the canister composes a message and places its hash in the certified data structure. The gateway polls for messages and retrieves the message together with the certificate. The gateway passes on the message and the certificate to the client over the websocket.
 6. Whenever the websocket with the client is closed, the gateway calls ws_close. Afterwards no more messages can be sent from the canister to the client.
 
 # Backend canister interface
 
 * **"ws_register": (blob) -> (nat64);**
+
   Client submits its public key in binary before opening the websocket. Method returns client_id.
 * **"ws_get_client_key": (nat64) -> (blob);**
+
   Gateway calls this method to get a client’s public key, in order to verify its signature and accept the client’s websocket connection as valid.
 * **"ws_open": (blob, blob) -> (bool);**
+
   Gateway calls this method to register to poll for client’s messages. First argument is the cbor encoding of
-  ```
-  {
+  ```{
     client_id: u64,
     canister_id: String,
-  }
-  ```
+  }```
   The second argument is the signature of the first argument corresponding to the client_id.
 * **"ws_close": (nat64) -> ();**
   The gateway calls this method to close the websocket corresponding to the given client_id. The canister deletes the clients data and afterwards cannot queue any more messages for the client.

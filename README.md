@@ -167,3 +167,5 @@ We could encrypt the messages between the client and the canister (so that theyâ
 3. Heartbeat messages are not implemented yet.
 Heartbeat messages would ensure that the client/canister can detect the gateway crashing or misbehaving by delaying messages, and timeout. As of yet, if the gateway crashes or misbehaves, it may appear to the canister that the connection is still open, while the websocket between the gateway and the client has been closed (and vice versa).
 4. The authentication of the identity used to register the websocket might expire (for example if using the Internet Identity), but the resulting websocket connections don't expire, constituting a security risk.
+
+TEST

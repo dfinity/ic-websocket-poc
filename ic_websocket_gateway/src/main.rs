@@ -28,9 +28,9 @@ const FETCH_KEY: bool = true;
 
 #[derive(CandidType, Clone, Deserialize, Serialize, Eq, PartialEq, Debug)]
 #[candid_path("ic_cdk::export::candid")]
-struct MessageFromClient {
+struct FirstMessageFromClient {
     #[serde(with = "serde_bytes")]
-    content: Vec<u8>,
+    client_canister_id: Vec<u8>,
     #[serde(with = "serde_bytes")]
     sig: Vec<u8>,
 }
@@ -70,15 +70,15 @@ impl ezsockets::SessionExt for GatewaySession {
 
     async fn binary(&mut self, bytes: Vec<u8>) -> Result<(), Error> {
         if !self.canister_connected {
-            let m: MessageFromClient = from_slice(&bytes).unwrap();
-            let content: ClientCanisterId = from_slice(&m.content).unwrap();
+            let m: FirstMessageFromClient = from_slice(&bytes).unwrap();
+            let content: ClientCanisterId = from_slice(&m.client_canister_id).unwrap();
             let canister_id = Principal::from_text(&content.canister_id).unwrap();
 
             let client_key =
                 canister_methods::ws_get_client_key(&self.agent, &canister_id, content.client_id)
                     .await;
             let sig = Signature::from_slice(&m.sig).unwrap();
-            let valid = client_key.verify(&m.content, &sig);
+            let valid = client_key.verify(&m.client_canister_id, &sig);
 
             match valid {
                 Ok(_) => {
@@ -92,9 +92,13 @@ impl ezsockets::SessionExt for GatewaySession {
                         canister_id: content.canister_id,
                         canister_client_id: content.client_id,
                     });
-                    let ret =
-                        canister_methods::ws_open(&self.agent, &canister_id, m.content, m.sig)
-                            .await;
+                    let ret = canister_methods::ws_open(
+                        &self.agent,
+                        &canister_id,
+                        m.client_canister_id,
+                        m.sig,
+                    )
+                    .await;
                     println!("ws_open:{}", ret);
                 }
                 Err(_) => println!("Client's signature does not verify."),

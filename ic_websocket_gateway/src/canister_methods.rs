@@ -67,13 +67,8 @@ pub async fn ws_get_client_key(
     PublicKey::from_slice(&Decode!(&res, Vec<u8>).map_err(|e| e.to_string()).unwrap()).unwrap()
 }
 
-pub async fn ws_open(
-    agent: &Agent,
-    canister_id: &Principal,
-    content: Vec<u8>,
-    sig: Vec<u8>,
-) -> bool {
-    let args = candid::encode_args((content, sig)).unwrap();
+pub async fn ws_open(agent: &Agent, canister_id: &Principal, msg: Vec<u8>, sig: Vec<u8>) -> bool {
+    let args = candid::encode_args((msg, sig)).unwrap();
 
     let res = agent
         .update(canister_id, "ws_open")

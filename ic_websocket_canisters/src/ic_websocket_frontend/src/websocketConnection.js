@@ -92,13 +92,13 @@ export default class websocketConnection {
     let to_sign = new Uint8Array(cbor_content);
     let sig = await ed.sign(to_sign, this.key);
 
-    let message = {
-      content: cbor_content,
+    let first_message = {
+      client_canister_id: cbor_content,
       sig: sig,
     };
 
     // Send the first message
-    let ws_message = Cbor.encode(message);
+    let ws_message = Cbor.encode(first_message);
     this.sendMessage(ws_message);
     this.sequence_num = 0;
   }
